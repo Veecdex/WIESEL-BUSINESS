@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pricing Plan </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/lucide-static/font/lucide.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="py-6 border-b border-gray-700">
+    <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Upgrade Plan</h1>
+      <span class="text-sm bg-indigo-600 px-3 py-1 rounded-lg" onclick="window.location.href='dashboard.html'" >
+       Go to <strong>Dashboard</strong>
+      </span>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 max-w-6xl mx-auto px-6 py-12">
+    <h2 class="text-3xl font-bold text-center mb-4">Choose Your Upgrade</h2>
+    <p class="text-center text-gray-400 mb-10">Scale your product space as your business grows</p>
+
+    <!-- Cards -->
+    <div class="grid gap-8 md:grid-cols-3">
+
+      <!-- Plan 1 -->
+      <div class="relative bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1">
+        <h3 class="text-xl font-semibold mb-3 text-white">+25 Products</h3>
+        <p class="text-gray-300 text-sm mb-6">Expand your limit with more slots</p>
+        <p class="text-4xl font-bold text-indigo-400 mb-6">₦1,500</p>
+        <ul class="space-y-3 mb-8 text-sm text-gray-200">
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-green-400"></i> Extra 25 product slots</li>
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-green-400"></i> Instant code delivery</li>
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-green-400"></i> Lifetime validity</li>
+        </ul>
+        <button class="w-full py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition">Upgrade</button>
+      </div>
+
+      <!-- Plan 2 (Highlighted) -->
+      <div class="relative bg-gradient-to-b from-indigo-600/90 to-indigo-700 rounded-2xl p-8 shadow-2xl border-2 border-indigo-400 transform hover:-translate-y-1 transition">
+        <div class="absolute -top-3 right-4 bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded">Popular</div>
+        <h3 class="text-xl font-semibold mb-3 text-white">+30 Products</h3>
+        <p class="text-gray-200 text-sm mb-6">Best choice for growing businesses</p>
+        <p class="text-4xl font-bold text-white mb-6">₦2,000</p>
+        <ul class="space-y-3 mb-8 text-sm text-white/90">
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-white"></i> Extra 30 product slots</li>
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-white"></i> Premium support</li>
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-white"></i> Lifetime validity</li>
+        </ul>
+        <button class="w-full py-3 bg-white text-indigo-700 rounded-xl font-bold hover:bg-gray-100 transition">Upgrade</button>
+      </div>
+
+      <!-- Plan 3 -->
+      <div class="relative bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1">
+        <h3 class="text-xl font-semibold mb-3 text-white">+40 Products</h3>
+        <p class="text-gray-300 text-sm mb-6">For businesses ready to scale big</p>
+        <p class="text-4xl font-bold text-indigo-400 mb-6">₦3,000</p>
+        <ul class="space-y-3 mb-8 text-sm text-gray-200">
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-green-400"></i> Extra 40 product slots</li>
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-green-400"></i> Priority activation</li>
+          <li class="flex items-center gap-2"><i class="lucide-check-circle text-green-400"></i> Lifetime validity</li>
+        </ul>
+        <button class="w-full py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition">Upgrade</button>
+      </div>
+
+    </div>
+
+    <!-- Info -->
+    <div class="mt-12 text-center">
+   <p class="text-gray-400 text-sm max-w-xl mx-auto">
+  After upgrading, your <span class="font-semibold text-indigo-400">product slots</span> will be updated 
+  automatically once your payment is confirmed, usually in less than 24 hours.
+</p>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 py-6 text-center text-gray-400 text-sm">
+    © 2025 Wiesel Business. All rights reserved.
+  </footer>
+
+</body>
+</html>
