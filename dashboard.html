@@ -642,6 +642,18 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
         alert("Failed to log out. Please try again.");
       });
   });
+
+  document.getElementById("logoutBtnm").addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        // Redirect after successful logout
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+        alert("Failed to log out. Please try again.");
+      });
+  });
   </script>
   
 </head>
@@ -711,12 +723,12 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
           Upgrade Plan
         </button>
       </div>
-      <button 
-      id="logoutBtn"
-      class="flex items-center gap-2 w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white px-3 py-2 rounded-xl hover:bg-red-600 transition"
-    >
-      <i data-lucide="log-out" class="w-5 h-5"></i> Log Out
-    </button>
+ <button 
+  id="logoutBtn"
+  class="flex items-center gap-2 w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white px-3 py-2 rounded-xl hover:bg-red-600 transition"
+>
+  <i data-lucide="log-out" class="w-5 h-5"></i> Log Out
+</button>
     
     </div>
   </aside>
@@ -1040,13 +1052,12 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
         Upgrade Plan
       </button>
     </div>
-
- <button 
-  id="logoutBtn"
-  class="flex items-center gap-2 w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white px-3 py-2 rounded-xl hover:bg-red-600 transition"
->
-  <i data-lucide="log-out" class="w-5 h-5"></i> Log Out
-</button>
+    <button 
+    id="logoutBtnm"
+    class="flex items-center gap-2 w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white px-3 py-2 rounded-xl hover:bg-red-600 transition"
+  >
+    <i data-lucide="log-out" class="w-5 h-5"></i> Log Out
+  </button>
 
   </div>
 </section>
