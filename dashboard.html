@@ -440,9 +440,7 @@ async function saveSettings(e) {
   const industry = document.getElementById('settingsIndustry')?.value.trim() || '';
   const type = document.getElementById('settingsType')?.value || '';
   const target = parseFloat(document.getElementById('settingsTarget')?.value) || 0;
- const sLimit = document.getElementById('settingsProductLimit');
-if (sLimit) sLimit.value = window.app.profile.productLimit || 15;
-
+  const productLimit = parseInt(document.getElementById('settingsProductLimit')?.value) || 15;
 
   await setDoc(doc(db, 'users', window.app.user.uid), {
     businessName: name,
@@ -452,8 +450,9 @@ if (sLimit) sLimit.value = window.app.profile.productLimit || 15;
     productLimit
   }, { merge: true });
 
-  alert('Settings saved');
+  alert('Settings saved ✅');
 }
+
 
 
 // ---------------- CHAT ----------------
