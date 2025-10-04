@@ -717,37 +717,36 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     <!-- Header -->
    <!-- Header -->
 <!-- FIXED DARK HEADER -->
+<!-- BRIGHT MODERN HEADER -->
 <header 
-  class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-6 bg-gray-900 shadow-md"
+  class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-6 
+         bg-white shadow-md rounded-b-2xl border-b border-gray-200"
 >
   <!-- Left side (Avatar + Biz Info) -->
   <div class="flex items-center gap-4">
     <div 
-    id="bizAvatar" 
-    class="w-12 h-12 rounded-full flex items-center justify-center text-gray-900 font-bold text-lg bg-gradient-to-r from-yellow-400 to-yellow-600 shadow cursor-pointer"
-    title="Click to upload profile image"
-  > WB</div>
-  
-  <!-- Hidden file input for uploading avatar -->
-  <input type="file" id="avatarInput" accept="image/*" class="hidden" />
-  
-     
-
+      id="bizAvatar" 
+      class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg 
+             bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow"
+    >
+      WB
+    </div>
     <div>
-      <div id="bizIndustryHeader" class="text-sm text-gray-300">wieselbusiness</div>
-      <div id="bizNameHeader" class="text-lg font-semibold text-white">Loading...</div>
+      <div id="bizIndustryHeader" class="text-sm text-gray-500">wieselbusiness</div>
+      <div id="bizNameHeader" class="text-lg font-semibold text-gray-800">Loading...</div>
     </div>
   </div>
 
   <!-- Right side (Date) -->
-  <div class="flex items-center gap-2 text-sm text-gray-300">
-    <i data-lucide="calendar" class="w-4 h-4 text-gray-300"></i>
-    Today: <strong id="today" class="text-white"></strong>
+  <div class="flex items-center gap-2 text-sm text-gray-600">
+    <i data-lucide="calendar" class="w-4 h-4 text-gray-500"></i>
+    Today: <strong id="today" class="text-gray-800"></strong>
   </div>
 </header>
 
-<!-- MAIN CONTENT WRAPPER -->
+<!-- Adjust main wrapper padding for fixed header -->
 <main class="pt-24 px-6">
+
   <!-- Your pages (home, products, sales, etc.) go here -->
 </main>
 
