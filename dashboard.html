@@ -121,33 +121,89 @@ document.addEventListener("DOMContentLoaded", () => {
       const file = e.target.files[0];
       if (!file) return;
 
-      // Check file size (<= 1MB)
-      if (file.size > 1024 * 1024) {
-        showToast("Image must be less than or equal to 1MB", "error");
-        inputEl.value = "";
-        return;
-      }
+      try {
+        // Compress image before upload
+        const compressedImage = await compressImage(file, 1 * 1024 * 1024); // target ~1MB
 
-      // Convert image to Base64 (data URL)
-      const reader = new FileReader();
-      reader.onload = async function(ev) {
-        const base64Image = ev.target.result;
+        const reader = new FileReader();
+        reader.onload = async function(ev) {
+          const base64Image = ev.target.result;
 
-        try {
-          // Save directly to Firestore under user doc
           await updateDoc(doc(db, "users", window.app.user.uid), {
             avatarImage: base64Image
           });
 
           showToast("Profile image updated ✅", "success");
-        } catch (err) {
-          showToast(cleanErrorMessage(err), "error");
-        }
-      };
-      reader.readAsDataURL(file);
+        };
+        reader.readAsDataURL(compressedImage);
+      } catch (err) {
+        showToast("Error compressing image: " + err.message, "error");
+      }
     });
   }
 });
+
+/**
+ * Compress image to roughly target size using Canvas.
+ * @param {File} file - The original file
+ * @param {number} maxSizeBytes - Max desired size in bytes
+ * @returns {Promise<Blob>} - Compressed image blob
+ */
+function compressImage(file, maxSizeBytes) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      img.src = e.target.result;
+    };
+
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      // Resize large images proportionally
+      let width = img.width;
+      let height = img.height;
+      const maxDimension = 1024;
+      if (width > height && width > maxDimension) {
+        height *= maxDimension / width;
+        width = maxDimension;
+      } else if (height > width && height > maxDimension) {
+        width *= maxDimension / height;
+        height = maxDimension;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Adjust quality dynamically
+      let quality = 0.9;
+      function attemptCompression() {
+        canvas.toBlob(
+          (blob) => {
+            if (blob.size > maxSizeBytes && quality > 0.1) {
+              quality -= 0.1;
+              attemptCompression();
+            } else {
+              resolve(blob);
+            }
+          },
+          "image/jpeg",
+          quality
+        );
+      }
+
+      attemptCompression();
+    };
+
+    img.onerror = () => reject(new Error("Invalid image file"));
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
 
 
 // ---------------- FIREBASE LISTENERS ----------------
@@ -717,36 +773,40 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     <!-- Header -->
    <!-- Header -->
 <!-- FIXED DARK HEADER -->
-<!-- BRIGHT MODERN HEADER -->
 <header 
   class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-6 
-         bg-white shadow-md rounded-b-2xl border-b border-gray-200"
+  bg-white/70 backdrop-blur-md shadow-lg rounded-b-2xl border-b border-gray-200"
 >
   <!-- Left side (Avatar + Biz Info) -->
   <div class="flex items-center gap-4">
     <div 
       id="bizAvatar" 
-      class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg 
-             bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow"
+      class="w-12 h-12 rounded-full flex items-center justify-center text-gray-900 font-bold text-lg 
+      bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-md cursor-pointer hover:scale-105 transition-transform duration-200"
+      title="Click to upload profile image"
     >
       WB
     </div>
+  
+    <!-- Hidden file input for uploading avatar -->
+    <input type="file" id="avatarInput" accept="image/*" class="hidden" />
+
     <div>
-      <div id="bizIndustryHeader" class="text-sm text-gray-500">wieselbusiness</div>
-      <div id="bizNameHeader" class="text-lg font-semibold text-gray-800">Loading...</div>
+      <div id="bizIndustryHeader" class="text-sm text-gray-500 font-medium">wieselbusiness</div>
+      <div id="bizNameHeader" class="text-lg font-semibold text-gray-900">Loading...</div>
     </div>
   </div>
 
   <!-- Right side (Date) -->
   <div class="flex items-center gap-2 text-sm text-gray-600">
-    <i data-lucide="calendar" class="w-4 h-4 text-gray-500"></i>
+    <i data-lucide="calendar" class="w-4 h-4 text-gray-600"></i>
     Today: <strong id="today" class="text-gray-800"></strong>
   </div>
 </header>
 
-<!-- Adjust main wrapper padding for fixed header -->
-<main class="pt-24 px-6">
 
+<!-- MAIN CONTENT WRAPPER -->
+<main class="pt-24 px-6">
   <!-- Your pages (home, products, sales, etc.) go here -->
 </main>
 
