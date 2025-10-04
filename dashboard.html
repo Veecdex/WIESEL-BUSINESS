@@ -413,7 +413,7 @@ function updateTodayAndChart() {
     const ctx = canvas.getContext('2d');
     chart = new Chart(ctx, {
       type: 'line',
-      data: { labels, datasets: [{ label: 'Sales', data, tension: 0.3, fill: true, borderColor: '#4f46e5' }] },
+      data: { labels, datasets: [{ label: 'Sales', data, tension: 0.3, fill: true, borderColor: 'green' }] },
       options: { responsive: true, maintainAspectRatio: false }
     });
   } else {
