@@ -86,13 +86,69 @@ function colorFromString(s) {
   return `hsl(${h} 70% 50%)`;
 }
 
+// Default initials avatar
 function renderAvatar(name) {
-  const el = document.getElementById('bizAvatar');
+  const el = document.getElementById("bizAvatar");
   if (!el) return;
-  const initial = (name || 'B').charAt(0).toUpperCase();
+
+  // Check if user has uploaded an image
+  const profile = window.app?.profile;
+  if (profile?.avatarImage) {
+    el.style.background = "transparent";
+    el.textContent = "";
+    el.style.backgroundImage = `url(${profile.avatarImage})`;
+    el.style.backgroundSize = "cover";
+    el.style.backgroundPosition = "center";
+    return;
+  }
+
+  // Otherwise use initials + color
+  const initial = (name || "B").charAt(0).toUpperCase();
   el.textContent = initial;
-  el.style.background = colorFromString(name || 'business');
+  el.style.background = colorFromString(name || "business");
+  el.style.backgroundImage = "none";
 }
+
+// Avatar upload logic
+document.addEventListener("DOMContentLoaded", () => {
+  const avatarEl = document.getElementById("bizAvatar");
+  const inputEl = document.getElementById("avatarInput");
+
+  if (avatarEl && inputEl) {
+    avatarEl.addEventListener("click", () => inputEl.click());
+
+    inputEl.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Check file size (<= 1MB)
+      if (file.size > 1024 * 1024) {
+        showToast("Image must be less than or equal to 1MB", "error");
+        inputEl.value = "";
+        return;
+      }
+
+      // Convert image to Base64 (data URL)
+      const reader = new FileReader();
+      reader.onload = async function(ev) {
+        const base64Image = ev.target.result;
+
+        try {
+          // Save directly to Firestore under user doc
+          await updateDoc(doc(db, "users", window.app.user.uid), {
+            avatarImage: base64Image
+          });
+
+          showToast("Profile image updated ✅", "success");
+        } catch (err) {
+          showToast(cleanErrorMessage(err), "error");
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+});
+
 
 // ---------------- FIREBASE LISTENERS ----------------
 let productsUnsub, salesUnsub, messagesUnsub, profileUnsub;
@@ -667,11 +723,16 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   <!-- Left side (Avatar + Biz Info) -->
   <div class="flex items-center gap-4">
     <div 
-      id="bizAvatar" 
-      class="w-12 h-12 rounded-full flex items-center justify-center text-gray-900 font-bold text-lg bg-gradient-to-r from-yellow-400 to-yellow-600 shadow"
-    >
-      WB
-    </div>
+    id="bizAvatar" 
+    class="w-12 h-12 rounded-full flex items-center justify-center text-gray-900 font-bold text-lg bg-gradient-to-r from-yellow-400 to-yellow-600 shadow cursor-pointer"
+    title="Click to upload profile image"
+  > WB</div>
+  
+  <!-- Hidden file input for uploading avatar -->
+  <input type="file" id="avatarInput" accept="image/*" class="hidden" />
+  
+     
+
     <div>
       <div id="bizIndustryHeader" class="text-sm text-gray-300">wieselbusiness</div>
       <div id="bizNameHeader" class="text-lg font-semibold text-white">Loading...</div>
