@@ -7,14 +7,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- ✅ Google Font: Poppins for modern app feel -->
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
     body {
       background-color: #f9fafb;
       font-family: 'Poppins', sans-serif;
-      padding-top: 120px; /* more space for the fixed header */
+      padding-top: 120px;
     }
 
     header {
@@ -34,11 +34,10 @@
       display: flex;
       overflow-x: auto;
       gap: 1rem;
-      padding: 1.5rem 0; /* more space vertically */
+      padding: 1.5rem 0;
       scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
     }
     .scroll-container::-webkit-scrollbar { display: none; }
 
@@ -55,68 +54,13 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
     }
-
     .card:hover { transform: translateY(-4px); }
 
-    .brand-scroll {
-      display: flex;
+    /* Categories Grid */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1rem;
-      overflow-x: auto;
-      padding: 1.5rem 0; /* added more padding */
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      margin-top: 1.5rem;
-    }
-    .brand-scroll::-webkit-scrollbar { display: none; }
-
-    .brand-card {
-      flex: 0 0 140px;
-      height: 110px;
-      border-radius: 1rem;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(12, 16, 26, 0.08);
-      scroll-snap-align: start;
-      display: flex;
-      align-items: flex-end;
-      padding: 10px;
-      transition: all 0.3s ease;
-    }
-    .brand-card:hover { transform: scale(1.03); }
-
-    .brand-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.00) 30%, rgba(0,0,0,0.45) 100%);
-    }
-
-    .brand-info {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 1;
-    }
-
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-    }
-
-    .brand-name {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: white;
-      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
     .business-card {
@@ -136,15 +80,35 @@
       height: 140px;
       object-fit: cover;
     }
-    .business-info {
-      padding: 0.75rem 1rem;
-    }
+    .business-info { padding: 0.75rem 1rem; }
+    .rating svg { width: 14px; height: 14px; color: #facc15; }
 
-    .rating svg {
-      width: 14px;
-      height: 14px;
-      color: #facc15;
+    /* Floating button */
+    .fab { position: fixed; bottom: 2rem; right: 1.5rem; z-index: 60; }
+    .fab-btn {
+      width: 56px; height: 56px; border-radius: 50%;
+      background-color: #4f46e5; color: white;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.4);
+      transition: transform 0.3s ease, background-color 0.3s ease;
     }
+    .fab-btn:hover { background-color: #4338ca; transform: scale(1.05); }
+
+    .fab-icons {
+      display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+      margin-bottom: 0.8rem;
+      opacity: 0; transform: translateY(20px);
+      pointer-events: none; transition: all 0.3s ease;
+    }
+    .fab-icons.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    .fab-icon-btn {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: white; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.25s ease, background 0.25s ease;
+    }
+    .fab-icon-btn:hover { transform: translateY(-2px); background: #f3f4f6; }
+    .fab-icon-btn.active { background: #eef2ff; border: 1.5px solid #4f46e5; }
   </style>
 </head>
 <body class="flex flex-col items-center justify-start p-4">
@@ -188,7 +152,7 @@
       <button class="text-xs text-blue-500 hover:underline">See all</button>
     </div>
 
-    <div class="grid grid-cols-4 gap-3 text-center">
+    <div class="categories-grid text-center">
       <div>
         <div class="bg-pink-100 p-3 rounded-full mx-auto">
           <i data-lucide="heart" class="w-5 h-5 text-pink-500 mx-auto"></i>
@@ -216,10 +180,8 @@
     </div>
   </section>
 
-
-
   <!-- Nearby Businesses -->
-  <section class="mt-10 w-full max-w-md mb-12">
+  <section class="mt-10 w-full max-w-md mb-24">
     <div class="flex items-center justify-between mb-3">
       <h2 class="text-sm font-semibold text-gray-800">Nearby Businesses</h2>
       <button class="text-xs text-blue-500 hover:underline">See all</button>
@@ -237,6 +199,7 @@
             <i data-lucide="star" class="text-yellow-400"></i>
             <i data-lucide="star-half" class="text-yellow-400"></i>
           </div>
+          <button class="mt-3 text-xs text-blue-600 font-medium hover:underline">View Business</button>
         </div>
       </div>
 
@@ -251,13 +214,37 @@
             <i data-lucide="star" class="text-yellow-400"></i>
             <i data-lucide="star" class="text-yellow-400"></i>
           </div>
+          <button class="mt-3 text-xs text-blue-600 font-medium hover:underline">View Business</button>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Floating Action Button -->
+  <div class="fab">
+    <div id="fabIcons" class="fab-icons">
+      <button class="fab-icon-btn active"><i data-lucide="home"></i></button>
+      <button class="fab-icon-btn"><i data-lucide="search"></i></button>
+      <button class="fab-icon-btn"><i data-lucide="settings"></i></button>
+    </div>
+    <button id="fabMain" class="fab-btn"><i data-lucide="plus"></i></button>
+  </div>
+
   <script>
     lucide.createIcons();
+
+    const fabMain = document.getElementById('fabMain');
+    const fabIcons = document.getElementById('fabIcons');
+    let expanded = false;
+
+    fabMain.addEventListener('click', () => {
+      expanded = !expanded;
+      fabIcons.classList.toggle('show', expanded);
+      fabMain.innerHTML = expanded
+        ? '<i data-lucide="x"></i>'
+        : '<i data-lucide="plus"></i>';
+      lucide.createIcons();
+    });
   </script>
 </body>
 </html>
