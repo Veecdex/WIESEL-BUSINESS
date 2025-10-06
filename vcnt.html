@@ -3,277 +3,261 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E-commerce Categories — Brands</title>
+  <title>E-commerce Categories — Brands & Businesses</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- ✅ Google Font: Poppins for modern app feel -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+
   <style>
+    body {
+      background-color: #f9fafb;
+      font-family: 'Poppins', sans-serif;
+      padding-top: 120px; /* more space for the fixed header */
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(229, 231, 235, 0.6);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      border-radius: 0 0 1.25rem 1.25rem;
+    }
+
     .scroll-container {
       display: flex;
       overflow-x: auto;
       gap: 1rem;
+      padding: 1.5rem 0; /* more space vertically */
       scroll-snap-type: x mandatory;
-      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-top: 1rem;
     }
     .scroll-container::-webkit-scrollbar { display: none; }
 
     .card {
       flex: 0 0 85%;
-      scroll-snap-align: start;
+      min-height: 150px;
       border-radius: 1.25rem;
       padding: 1rem;
-      position: relative;
+      background: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 150px;
-      transition: transform 0.3s ease;
-    }
-    .card:hover { transform: scale(1.02); }
-    .card img { width: 90px; height: 90px; object-fit: cover; border-radius: 0.75rem; }
-    .icon { position: absolute; top: 1rem; right: 1rem; width: 20px; height: 20px; opacity: 0.2; }
-
-    .categories-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
+      scroll-snap-align: start;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
     }
 
-    /* ========== BRAND SCROLL ========== */
+    .card:hover { transform: translateY(-4px); }
+
     .brand-scroll {
       display: flex;
-      gap: 0.75rem;
+      gap: 1rem;
       overflow-x: auto;
-      padding: 6px 2px;
+      padding: 1.5rem 0; /* added more padding */
       scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none; /* Firefox */
+      scrollbar-width: none;
+      margin-top: 1.5rem;
     }
     .brand-scroll::-webkit-scrollbar { display: none; }
+
     .brand-card {
-      flex: 0 0 140px;               /* base width for each card */
+      flex: 0 0 140px;
       height: 110px;
-      border-radius: 12px;
+      border-radius: 1rem;
       background-size: cover;
       background-position: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 6px 18px rgba(12, 16, 26, 0.06);
+      box-shadow: 0 6px 18px rgba(12, 16, 26, 0.08);
       scroll-snap-align: start;
-      transition: transform 0.32s cubic-bezier(.2,.9,.3,1), box-shadow 0.32s;
       display: flex;
       align-items: flex-end;
       padding: 10px;
+      transition: all 0.3s ease;
     }
-    .brand-card:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 12px 28px rgba(12,16,26,0.12);
-    }
+    .brand-card:hover { transform: scale(1.03); }
 
-    /* subtle gradient so text is readable over backgrounds */
     .brand-card::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.00) 30%, rgba(0,0,0,0.40) 100%);
-      z-index: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.00) 30%, rgba(0,0,0,0.45) 100%);
     }
 
     .brand-info {
       position: relative;
-      z-index: 1;
       display: flex;
       align-items: center;
       gap: 8px;
+      z-index: 1;
     }
 
     .brand-logo {
       width: 34px;
       height: 34px;
-      object-fit: contain;
-      background: rgba(255,255,255,0.85);
-      padding: 5px;
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
     }
 
     .brand-name {
       font-size: 0.85rem;
-      font-weight: 700;
-      color: #fff;
-      text-shadow: 0 6px 18px rgba(0,0,0,0.4);
-      white-space: nowrap;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
-    /* responsive: show slightly wider cards on larger screens */
-    @media (min-width: 640px) {
-      .brand-card { flex: 0 0 160px; height: 120px; }
+    .business-card {
+      background: white;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
     }
-    @media (min-width: 1024px) {
-      .brand-card { flex: 0 0 180px; height: 130px; }
+    .business-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .business-image {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+    }
+    .business-info {
+      padding: 0.75rem 1rem;
+    }
+
+    .rating svg {
+      width: 14px;
+      height: 14px;
+      color: #facc15;
     }
   </style>
 </head>
-<body class="bg-gray-50 font-sans min-h-screen flex flex-col items-center justify-start p-4 relative">
+<body class="flex flex-col items-center justify-start p-4">
 
   <!-- Header -->
-  <header class="bg-white rounded-xl p-4 flex items-center space-x-3 w-full max-w-md z-10 relative mb-4">
-    <img src="https://i.pravatar.cc/80" alt="User Avatar" class="w-10 h-10 rounded-full object-cover">
-    <div class="flex flex-col justify-center">
-      <h1 class="text-sm font-medium text-gray-800">Good afternoon, John</h1>
-      <p class="text-xs text-gray-500 mt-0.5">Who would you like to connect with today?</p>
+  <header class="p-4 flex items-center space-x-3 max-w-md mx-auto">
+    <img src="https://i.pravatar.cc/80" alt="User Avatar" class="w-10 h-10 rounded-full object-cover shadow-sm">
+    <div>
+      <h1 class="text-sm font-semibold text-gray-800">Good afternoon, John</h1>
+      <p class="text-xs text-gray-500">Who would you like to connect with today?</p>
     </div>
   </header>
 
-  <!-- Horizontal Scrollable Cards -->
-  <div class="scroll-container w-full max-w-md z-10 mb-6">
-    <div class="card bg-gradient-to-r from-rose-50 to-rose-100">
-      <div class="flex flex-col space-y-2">
-        <h2 class="text-sm font-semibold">Shop Local</h2>
-        <p class="text-xs text-gray-600 max-w-[180px]">Discover products from nearby vendors and get exclusive deals.</p>
-        <button class="text-xs bg-white px-3 py-1 rounded-full shadow-sm w-fit hover:bg-gray-100 transition">Explore</button>
+  <!-- Scrollable Cards -->
+  <section class="mt-6 w-full max-w-md">
+    <div class="scroll-container">
+      <div class="card bg-gradient-to-r from-indigo-50 to-indigo-100">
+        <div class="space-y-2">
+          <h2 class="text-sm font-semibold">Shop Local</h2>
+          <p class="text-xs text-gray-600 max-w-[180px]">Discover nearby vendors and their amazing offers.</p>
+          <button class="text-xs bg-white px-3 py-1 rounded-full shadow-sm hover:bg-gray-100 transition">Explore</button>
+        </div>
+        <i data-lucide="shopping-bag" class="w-8 h-8 text-indigo-500"></i>
       </div>
-      <img src="https://img.icons8.com/color/96/online-store.png" alt="Shop">
-      <img src="https://img.icons8.com/ios-filled/50/shop.png" class="icon" alt="">
-    </div>
 
-    <div class="card bg-gradient-to-r from-blue-50 to-blue-100">
-      <div class="flex flex-col space-y-2">
-        <h2 class="text-sm font-semibold">Sell Your Products</h2>
-        <p class="text-xs text-gray-600 max-w-[180px]">Reach thousands of active buyers looking for what you sell.</p>
-        <button class="text-xs bg-white px-3 py-1 rounded-full shadow-sm w-fit hover:bg-gray-100 transition">Start Selling</button>
+      <div class="card bg-gradient-to-r from-pink-50 to-pink-100">
+        <div class="space-y-2">
+          <h2 class="text-sm font-semibold">Sell Your Products</h2>
+          <p class="text-xs text-gray-600 max-w-[180px]">Reach thousands of active buyers instantly.</p>
+          <button class="text-xs bg-white px-3 py-1 rounded-full shadow-sm hover:bg-gray-100 transition">Start Selling</button>
+        </div>
+        <i data-lucide="store" class="w-8 h-8 text-pink-500"></i>
       </div>
-      <img src="https://img.icons8.com/color/96/sales-performance.png" alt="Sell">
-      <img src="https://img.icons8.com/ios-filled/50/sell.png" class="icon" alt="">
     </div>
-
-    <div class="card bg-gradient-to-r from-green-50 to-green-100">
-      <div class="flex flex-col space-y-2">
-        <h2 class="text-sm font-semibold">Connect & Grow</h2>
-        <p class="text-xs text-gray-600 max-w-[180px]">Chat directly with sellers and other business owners in your area.</p>
-        <button class="text-xs bg-white px-3 py-1 rounded-full shadow-sm w-fit hover:bg-gray-100 transition">Connect</button>
-      </div>
-      <img src="https://img.icons8.com/color/96/communication.png" alt="Connect">
-      <img src="https://img.icons8.com/ios-filled/50/handshake.png" class="icon" alt="">
-    </div>
-  </div>
+  </section>
 
   <!-- Other Categories -->
-  <section class="w-full max-w-md z-10">
+  <section class="mt-6 w-full max-w-md">
     <div class="flex items-center justify-between mb-3">
       <h2 class="text-sm font-semibold text-gray-800">Other Categories</h2>
       <button class="text-xs text-blue-500 hover:underline">See all</button>
     </div>
 
-    <div class="categories-grid">
-      <!-- ... your category tiles (unchanged) ... -->
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-rose-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/fluency/48/t-shirt.png" alt="Fashion" class="w-6 h-6">
+    <div class="grid grid-cols-4 gap-3 text-center">
+      <div>
+        <div class="bg-pink-100 p-3 rounded-full mx-auto">
+          <i data-lucide="heart" class="w-5 h-5 text-pink-500 mx-auto"></i>
         </div>
-        <span class="text-xs text-gray-700">Fashion</span>
+        <p class="text-xs text-gray-700 mt-1">Beauty</p>
       </div>
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-blue-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/color/48/laptop.png" alt="Electronics" class="w-6 h-6">
+      <div>
+        <div class="bg-blue-100 p-3 rounded-full mx-auto">
+          <i data-lucide="shirt" class="w-5 h-5 text-blue-500 mx-auto"></i>
         </div>
-        <span class="text-xs text-gray-700">Electronics</span>
+        <p class="text-xs text-gray-700 mt-1">Fashion</p>
       </div>
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-yellow-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/color/48/grocery-bag.png" alt="Groceries" class="w-6 h-6">
+      <div>
+        <div class="bg-green-100 p-3 rounded-full mx-auto">
+          <i data-lucide="dumbbell" class="w-5 h-5 text-green-500 mx-auto"></i>
         </div>
-        <span class="text-xs text-gray-700">Groceries</span>
+        <p class="text-xs text-gray-700 mt-1">Fitness</p>
       </div>
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-green-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/color/48/home.png" alt="Home" class="w-6 h-6">
+      <div>
+        <div class="bg-yellow-100 p-3 rounded-full mx-auto">
+          <i data-lucide="coffee" class="w-5 h-5 text-yellow-500 mx-auto"></i>
         </div>
-        <span class="text-xs text-gray-700">Home</span>
-      </div>
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-purple-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/color/48/book.png" alt="Books" class="w-6 h-6">
-        </div>
-        <span class="text-xs text-gray-700">Books</span>
-      </div>
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-orange-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/color/48/fitness.png" alt="Fitness" class="w-6 h-6">
-        </div>
-        <span class="text-xs text-gray-700">Fitness</span>
-      </div>
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-teal-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/color/48/sofa.png" alt="Furniture" class="w-6 h-6">
-        </div>
-        <span class="text-xs text-gray-700">Furniture</span>
-      </div>
-      <div class="flex flex-col items-center text-center space-y-1">
-        <div class="bg-pink-100 p-3 rounded-full">
-          <img src="https://img.icons8.com/color/48/cosmetics.png" alt="Beauty" class="w-6 h-6">
-        </div>
-        <span class="text-xs text-gray-700">Beauty</span>
+        <p class="text-xs text-gray-700 mt-1">Café</p>
       </div>
     </div>
   </section>
 
-  <!-- ===== IMPROVED BRAND STRIP (horizontal, background images) ===== -->
-  <section class="w-full max-w-md z-10 mt-6">
+
+
+  <!-- Nearby Businesses -->
+  <section class="mt-10 w-full max-w-md mb-12">
     <div class="flex items-center justify-between mb-3">
-      <h2 class="text-sm font-semibold text-gray-800">Top Brands</h2>
+      <h2 class="text-sm font-semibold text-gray-800">Nearby Businesses</h2>
       <button class="text-xs text-blue-500 hover:underline">See all</button>
     </div>
 
-    <div class="brand-scroll" role="list" aria-label="Top brands">
-      <!-- Example cards: each card uses the image as background -->
-      <div class="brand-card" role="listitem"
-           style="background-image: url('data:image/webp;base64,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');">
-        <div class="brand-info">
-          <img class="brand-logo" src="data:image/webp;base64,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" alt="Nike logo">
-          <span class="brand-name">Nike</span>
+    <div class="space-y-4">
+      <div class="business-card">
+        <img src="https://picsum.photos/id/1005/600/300" alt="Urban Café" class="business-image">
+        <div class="business-info">
+          <h3 class="font-semibold text-gray-900 text-sm">Urban Café</h3>
+          <p class="text-xs text-gray-500">45 Victoria Street, Lagos • Café & Bakery</p>
+          <div class="rating flex space-x-1 mt-1">
+            <i data-lucide="star" class="text-yellow-400"></i>
+            <i data-lucide="star" class="text-yellow-400"></i>
+            <i data-lucide="star" class="text-yellow-400"></i>
+            <i data-lucide="star-half" class="text-yellow-400"></i>
+          </div>
         </div>
       </div>
 
-      <div class="brand-card" role="listitem"
-           style="background-image: url('data:image/webp;base64,UklGRgIDAABXRUJQVlA4IPYCAAAQGgCdASqgAHcAPtU0tVqoJagoFwEAGolnANZtjcLm5uem+xHKuB8wMRf7mwrWCvaSCu3V6nEoMWFDJhwHGy+9F4Ni19KjcT1yxSPF9yjwMrzt248qprIja2eNkFg7t/Mh4U6MW9vzDihEdLctIe7OnPVddCZm/qLhpFW6UVKPKqoPHLRxYYHSNVgCiTJBJaQ87lMnSLS14dT5WtGRL15Ph4Ae0XNPt+qbvUECRzPe1B6jaC0WY3V/WJ63vSroEY+e6vaewAmLzTq13EXeDAgfhTu4UBp2rGmAAP77lAACqvk85Hs6FBEW0mVlo2I+Bwhy7gVI+ofBhXNMAVYGI/o9bAbREXmgRIMMWcFJxWPl1ZaEadQh6i8Q1nkiKljomz6OsGSFh0LynsFsgs8SfpRxt39QDUTMYSTgPA5nwsBR6JGRTtAmbX90GBhQPPyzRTuDfGN1rvPPFOfgk+TrRd2qP7YncwJJC2Xv7yVFnhDRsv1cU3HhRgiPuOghK0nRhRt+qwSSvH9kat0EXqn8rxJJYAH16W/eLqj06tmVZj0YpXV/KkdY82/cjMrGuu96Xh+cosL/W6PMS/Wq+dYqV5oI8k/nNq3DNI4lbdiv5QduEtsuW7fh99+z/whA856Sf0/e7C5/ZtUoNUJDX/GjPES/0293NAtFm7VwGCkcnqrK5E8OR03VykFE3RHvWGgEnkiTrPOFUDL2E2iSoTl4l2uapv9lxY9qs70neJQ3PM8VBs2DHocIYnTuZs5KE1udP3ZYVeq4n1V38o8JVNYfbizWQNuk2AjnbYTzcRg5usQqel6kuTz01NU5+lEwMivNvpx1PdcqemmN80d21vDen/ku+/m/OK7EswhKrz67ohVUUnsA68mHeLKHt0SZh8NjhkEsOW3zLSDdzgIT7KF1ksBlFFCQJfivo5qXvgs52H6x6Mo6fhcZ6sn1ZCy8KFP2HxZKITRi6i1jXG7jFo2Ly1/gaXdc/58fIOhUOaJsERWZ+9i8ZQAAAA==');">
-        <div class="brand-info">
-          <img class="brand-logo" src="https://img.icons8.com/ios-filled/50/000000/macbook.png" alt="Apple logo">
-          <span class="brand-name">Apple</span>
-        </div>
-      </div>
-
-      <div class="brand-card" role="listitem"
-           style="background-image: url('https://picsum.photos/seed/amazon/600/400');">
-        <div class="brand-info">
-          <img class="brand-logo" src="https://img.icons8.com/ios-filled/50/000000/shopping-cart.png" alt="Amazon logo">
-          <span class="brand-name">Amazon</span>
-        </div>
-      </div>
-
-      <div class="brand-card" role="listitem"
-           style="background-image: url('https://picsum.photos/seed/adidas/600/400');">
-        <div class="brand-info">
-          <img class="brand-logo" src="https://img.icons8.com/ios-filled/50/000000/sports-shoe.png" alt="Adidas logo">
-          <span class="brand-name">Adidas</span>
-        </div>
-      </div>
-
-      <div class="brand-card" role="listitem"
-           style="background-image: url('https://picsum.photos/seed/samsung/600/400');">
-        <div class="brand-info">
-          <img class="brand-logo" src="https://img.icons8.com/ios-filled/50/000000/smartphone.png" alt="Samsung logo">
-          <span class="brand-name">Samsung</span>
-        </div>
-      </div>
-
-      <div class="brand-card" role="listitem"
-           style="background-image: url('https://picsum.photos/seed/lv/600/400');">
-        <div class="brand-info">
-          <img class="brand-logo" src="https://img.icons8.com/ios-filled/50/000000/briefcase.png" alt="LV logo">
-          <span class="brand-name">Louis Vuitton</span>
+      <div class="business-card">
+        <img src="https://picsum.photos/id/1019/600/300" alt="Glow Beauty" class="business-image">
+        <div class="business-info">
+          <h3 class="font-semibold text-gray-900 text-sm">Glow Beauty Studio</h3>
+          <p class="text-xs text-gray-500">12 Broad Avenue, Abuja • Beauty & Spa</p>
+          <div class="rating flex space-x-1 mt-1">
+            <i data-lucide="star" class="text-yellow-400"></i>
+            <i data-lucide="star" class="text-yellow-400"></i>
+            <i data-lucide="star" class="text-yellow-400"></i>
+            <i data-lucide="star" class="text-yellow-400"></i>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 </html>
