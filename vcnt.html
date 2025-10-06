@@ -6,8 +6,6 @@
   <title>E-commerce Categories — Brands & Businesses</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
@@ -15,6 +13,7 @@
       background-color: #f9fafb;
       font-family: 'Poppins', sans-serif;
       padding-top: 120px;
+      overflow-x: hidden;
     }
 
     header {
@@ -37,7 +36,7 @@
       padding: 1.5rem 0;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
     .scroll-container::-webkit-scrollbar { display: none; }
 
@@ -56,13 +55,6 @@
     }
     .card:hover { transform: translateY(-4px); }
 
-    /* Categories Grid */
-    .categories-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
-    }
-
     .business-card {
       background: white;
       border-radius: 1rem;
@@ -75,40 +67,130 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
-    .business-image {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-    }
+    .business-image { width: 100%; height: 140px; object-fit: cover; }
     .business-info { padding: 0.75rem 1rem; }
     .rating svg { width: 14px; height: 14px; color: #facc15; }
 
-    /* Floating button */
-    .fab { position: fixed; bottom: 2rem; right: 1.5rem; z-index: 60; }
-    .fab-btn {
-      width: 56px; height: 56px; border-radius: 50%;
-      background-color: #4f46e5; color: white;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.4);
-      transition: transform 0.3s ease, background-color 0.3s ease;
+    /* Floating toggle button */
+    .floating-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 100;
+      background: #2563eb;
+      color: white;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .fab-btn:hover { background-color: #4338ca; transform: scale(1.05); }
 
-    .fab-icons {
-      display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
-      margin-bottom: 0.8rem;
-      opacity: 0; transform: translateY(20px);
-      pointer-events: none; transition: all 0.3s ease;
+    .floating-menu {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
     }
-    .fab-icons.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .floating-menu.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-    .fab-icon-btn {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: white; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.25s ease, background 0.25s ease;
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    .fab-icon-btn:hover { transform: translateY(-2px); background: #f3f4f6; }
-    .fab-icon-btn.active { background: #eef2ff; border: 1.5px solid #4f46e5; }
+    .menu-item:hover { background: #f3f4f6; }
+
+    .search-bar {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 400px;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      padding: 0.5rem 1rem;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 60;
+    }
+    .search-bar.active { display: flex; animation: slideDown 0.3s ease forwards; }
+    @keyframes slideDown { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+    .settings-panel {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      width: 280px;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      display: none;
+      z-index: 80;
+    }
+    .settings-panel.active { display: block; animation: fadeIn 0.3s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Vendor modal */
+    .vendor-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 200;
+    }
+    .vendor-modal.active { display: flex; animation: fadeInModal 0.3s ease forwards; }
+    @keyframes fadeInModal { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .vendor-content { background: #fff; width: 100%; max-width: 420px; border-radius: 1.25rem 1.25rem 0 0; padding: 1.5rem; box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.1); }
+
+    /* Communication modal */
+    .comm-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+    }
+    .comm-modal.active { display: flex; }
+    .comm-content {
+      background: #fff;
+      border-radius: 1rem;
+      width: 90%;
+      max-width: 360px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .comm-header { font-weight: 600; font-size: 1rem; margin-bottom: 1rem; }
+    .comm-body { margin-bottom: 1rem; }
+    .comm-body textarea { width: 100%; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.5rem; resize: none; }
+    .comm-buttons { display: flex; justify-content: center; gap: 0.5rem; }
+    .comm-buttons button { padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.8rem; transition: all 0.2s; }
+    .comm-buttons button:hover { opacity: 0.9; }
+
   </style>
 </head>
 <body class="flex flex-col items-center justify-start p-4">
@@ -152,36 +234,16 @@
       <button class="text-xs text-blue-500 hover:underline">See all</button>
     </div>
 
-    <div class="categories-grid text-center">
-      <div>
-        <div class="bg-pink-100 p-3 rounded-full mx-auto">
-          <i data-lucide="heart" class="w-5 h-5 text-pink-500 mx-auto"></i>
-        </div>
-        <p class="text-xs text-gray-700 mt-1">Beauty</p>
-      </div>
-      <div>
-        <div class="bg-blue-100 p-3 rounded-full mx-auto">
-          <i data-lucide="shirt" class="w-5 h-5 text-blue-500 mx-auto"></i>
-        </div>
-        <p class="text-xs text-gray-700 mt-1">Fashion</p>
-      </div>
-      <div>
-        <div class="bg-green-100 p-3 rounded-full mx-auto">
-          <i data-lucide="dumbbell" class="w-5 h-5 text-green-500 mx-auto"></i>
-        </div>
-        <p class="text-xs text-gray-700 mt-1">Fitness</p>
-      </div>
-      <div>
-        <div class="bg-yellow-100 p-3 rounded-full mx-auto">
-          <i data-lucide="coffee" class="w-5 h-5 text-yellow-500 mx-auto"></i>
-        </div>
-        <p class="text-xs text-gray-700 mt-1">Café</p>
-      </div>
+    <div class="grid grid-cols-4 gap-3 text-center">
+      <div><div class="bg-pink-100 p-3 rounded-full mx-auto"><i data-lucide="heart" class="w-5 h-5 text-pink-500 mx-auto"></i></div><p class="text-xs text-gray-700 mt-1">Beauty</p></div>
+      <div><div class="bg-blue-100 p-3 rounded-full mx-auto"><i data-lucide="shirt" class="w-5 h-5 text-blue-500 mx-auto"></i></div><p class="text-xs text-gray-700 mt-1">Fashion</p></div>
+      <div><div class="bg-green-100 p-3 rounded-full mx-auto"><i data-lucide="dumbbell" class="w-5 h-5 text-green-500 mx-auto"></i></div><p class="text-xs text-gray-700 mt-1">Fitness</p></div>
+      <div><div class="bg-yellow-100 p-3 rounded-full mx-auto"><i data-lucide="coffee" class="w-5 h-5 text-yellow-500 mx-auto"></i></div><p class="text-xs text-gray-700 mt-1">Café</p></div>
     </div>
   </section>
 
-  <!-- Nearby Businesses -->
-  <section class="mt-10 w-full max-w-md mb-24">
+  <!-- Businesses -->
+  <section class="mt-10 w-full max-w-md mb-16">
     <div class="flex items-center justify-between mb-3">
       <h2 class="text-sm font-semibold text-gray-800">Nearby Businesses</h2>
       <button class="text-xs text-blue-500 hover:underline">See all</button>
@@ -194,12 +256,9 @@
           <h3 class="font-semibold text-gray-900 text-sm">Urban Café</h3>
           <p class="text-xs text-gray-500">45 Victoria Street, Lagos • Café & Bakery</p>
           <div class="rating flex space-x-1 mt-1">
-            <i data-lucide="star" class="text-yellow-400"></i>
-            <i data-lucide="star" class="text-yellow-400"></i>
-            <i data-lucide="star" class="text-yellow-400"></i>
-            <i data-lucide="star-half" class="text-yellow-400"></i>
+            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star-half"></i>
           </div>
-          <button class="mt-3 text-xs text-blue-600 font-medium hover:underline">View Business</button>
+          <button class="view-business mt-2 text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition" data-name="Urban Café" data-category="Café & Bakery" data-about="A cozy café serving premium coffee, pastries, and brunch dishes in a warm setting." data-address="45 Victoria Street, Lagos" data-sell="Coffee, Pastries, Brunch Meals">View Business</button>
         </div>
       </div>
 
@@ -209,42 +268,144 @@
           <h3 class="font-semibold text-gray-900 text-sm">Glow Beauty Studio</h3>
           <p class="text-xs text-gray-500">12 Broad Avenue, Abuja • Beauty & Spa</p>
           <div class="rating flex space-x-1 mt-1">
-            <i data-lucide="star" class="text-yellow-400"></i>
-            <i data-lucide="star" class="text-yellow-400"></i>
-            <i data-lucide="star" class="text-yellow-400"></i>
-            <i data-lucide="star" class="text-yellow-400"></i>
+            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
           </div>
-          <button class="mt-3 text-xs text-blue-600 font-medium hover:underline">View Business</button>
+          <button class="view-business mt-2 text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition" data-name="Glow Beauty Studio" data-category="Beauty & Spa" data-about="Professional spa and skincare center dedicated to making you glow." data-address="12 Broad Avenue, Abuja" data-sell="Facials, Makeup, Spa Treatments">View Business</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Floating Action Button -->
-  <div class="fab">
-    <div id="fabIcons" class="fab-icons">
-      <button class="fab-icon-btn active"><i data-lucide="home"></i></button>
-      <button class="fab-icon-btn"><i data-lucide="search"></i></button>
-      <button class="fab-icon-btn"><i data-lucide="settings"></i></button>
+  <!-- Floating Menu -->
+  <div class="floating-btn" id="toggleBtn"><i data-lucide="plus"></i></div>
+  <div class="floating-menu" id="floatingMenu">
+    <div class="menu-item" id="homeBtn"><i data-lucide="home" class="text-blue-600"></i><span class="text-sm">Home</span></div>
+    <div class="menu-item" id="sellBtn"><i data-lucide="dollar-sign" class="text-green-600"></i><span class="text-sm">Sell</span></div>
+    <div class="menu-item" id="searchBtn"><i data-lucide="search"></i><span class="text-sm">Search</span></div>
+    <div class="menu-item" id="settingsBtn"><i data-lucide="settings"></i><span class="text-sm">Profile</span></div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-bar" id="searchBar">
+    <i data-lucide="search" class="text-gray-500"></i>
+    <input type="text" placeholder="Search businesses or brands..." class="flex-1 outline-none text-sm text-gray-700" />
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="flex items-center gap-3 mb-3">
+      <img src="https://i.pravatar.cc/100" alt="User" class="w-10 h-10 rounded-full">
+      <div>
+        <h3 class="font-semibold text-gray-800 text-sm">John Doe</h3>
+        <p class="text-xs text-gray-500">Lagos, Nigeria</p>
+      </div>
     </div>
-    <button id="fabMain" class="fab-btn"><i data-lucide="plus"></i></button>
+    <button class="w-full text-xs bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition">Logout</button>
+  </div>
+
+  <!-- Vendor Modal -->
+  <div class="vendor-modal" id="vendorModal">
+    <div class="vendor-content relative">
+      <button id="closeVendor" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+        <i data-lucide="x"></i>
+      </button>
+      <div id="vendorDetails"></div>
+    </div>
+  </div>
+
+  <!-- Communication Modal -->
+  <div class="comm-modal" id="commModal">
+    <div class="comm-content">
+      <h3 class="comm-header" id="commHeader"></h3>
+      <div class="comm-body" id="commBody"></div>
+      <div class="comm-buttons" id="commButtons">
+        <button id="commClose" class="bg-gray-100">Close</button>
+      </div>
+    </div>
   </div>
 
   <script>
     lucide.createIcons();
 
-    const fabMain = document.getElementById('fabMain');
-    const fabIcons = document.getElementById('fabIcons');
-    let expanded = false;
+    const toggleBtn = document.getElementById("toggleBtn");
+    const floatingMenu = document.getElementById("floatingMenu");
+    const searchBar = document.getElementById("searchBar");
+    const searchBtn = document.getElementById("searchBtn");
+    const settingsBtn = document.getElementById("settingsBtn");
+    const settingsPanel = document.getElementById("settingsPanel");
+    const vendorModal = document.getElementById("vendorModal");
+    const vendorDetails = document.getElementById("vendorDetails");
+    const closeVendor = document.getElementById("closeVendor");
 
-    fabMain.addEventListener('click', () => {
-      expanded = !expanded;
-      fabIcons.classList.toggle('show', expanded);
-      fabMain.innerHTML = expanded
-        ? '<i data-lucide="x"></i>'
-        : '<i data-lucide="plus"></i>';
-      lucide.createIcons();
+    const sellBtn = document.getElementById("sellBtn");
+
+    const commModal = document.getElementById("commModal");
+    const commHeader = document.getElementById("commHeader");
+    const commBody = document.getElementById("commBody");
+    const commClose = document.getElementById("commClose");
+
+    toggleBtn.addEventListener("click", () => {
+      floatingMenu.classList.toggle("active");
+      searchBar.classList.remove("active");
+      settingsPanel.classList.remove("active");
     });
+
+    searchBtn.addEventListener("click", () => {
+      searchBar.classList.toggle("active");
+      settingsPanel.classList.remove("active");
+      floatingMenu.classList.remove("active");
+    });
+
+    settingsBtn.addEventListener("click", () => {
+      settingsPanel.classList.toggle("active");
+      searchBar.classList.remove("active");
+      floatingMenu.classList.remove("active");
+    });
+
+    sellBtn.addEventListener("click", () => {
+      alert("Sell feature coming soon!");
+      floatingMenu.classList.remove("active");
+    });
+
+    // Vendor modal logic
+    document.querySelectorAll(".view-business").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const { name, category, about, address, sell } = btn.dataset;
+        vendorDetails.innerHTML = `
+          <h2 class="text-lg font-semibold text-gray-800 mb-1">${name}</h2>
+          <p class="text-sm text-gray-500 mb-2">${category}</p>
+          <p class="text-sm text-gray-600 mb-3">${about}</p>
+          <p class="text-xs text-gray-500 mb-4"><i data-lucide='map-pin' class='inline w-4 h-4'></i> ${address}</p>
+          <p class="text-sm text-gray-700 mb-4"><strong>What they sell:</strong> ${sell}</p>
+          <div class="flex gap-3">
+            <button class="comm-btn flex items-center gap-1 text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition" data-type="Message"><i data-lucide='message-circle'></i> Message</button>
+            <button class="comm-btn flex items-center gap-1 text-xs bg-green-50 text-green-600 px-3 py-1 rounded-full hover:bg-green-100 transition" data-type="Call"><i data-lucide='phone'></i> Call</button>
+            <button class="comm-btn flex items-center gap-1 text-xs bg-purple-50 text-purple-600 px-3 py-1 rounded-full hover:bg-purple-100 transition" data-type="Video Call"><i data-lucide='video'></i> Video Call</button>
+          </div>`;
+        lucide.createIcons();
+        vendorModal.classList.add("active");
+
+        // Add comm modal events
+        document.querySelectorAll(".comm-btn").forEach(cbtn => {
+          cbtn.addEventListener("click", () => {
+            const type = cbtn.dataset.type;
+            commHeader.textContent = `${type} with ${name}`;
+            if (type === "Message") {
+              commBody.innerHTML = `<textarea rows="4" placeholder="Type your message..."></textarea>`;
+            } else if (type === "Call") {
+              commBody.innerHTML = `<p>Calling ${name}...</p>`;
+            } else if (type === "Video Call") {
+              commBody.innerHTML = `<p>Starting video call with ${name}...</p>`;
+            }
+            commModal.classList.add("active");
+          });
+        });
+      });
+    });
+
+    closeVendor.addEventListener("click", () => { vendorModal.classList.remove("active"); });
+
+    commClose.addEventListener("click", () => { commModal.classList.remove("active"); });
   </script>
 </body>
 </html>
